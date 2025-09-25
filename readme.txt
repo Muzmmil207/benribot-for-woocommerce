@@ -1,8 +1,8 @@
 === BenriBot for WooCommerce ===
 Contributors: benribot
-Tags: woocommerce, chat, chatbot, ai, support, ecommerce, benribot
+Tags: woocommerce, chat, chatbot, ai, ecommerce
 Requires at least: 5.0
-Tested up to: 6.0
+Tested up to: 6.8
 Stable tag: 1.0.0
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html

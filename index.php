@@ -17,6 +17,8 @@ if ( ! defined( 'WPINC' ) ) {
     die;
 }
 
+define( 'BENRIBOT_VERSION', '1.0.0' );
+
 /**
  * Adds the BenriBot admin menu item.
  */
@@ -58,8 +60,8 @@ function benribot_settings_page_html() {
  * Registers the settings and fields.
  */
 function benribot_register_settings() {
-    register_setting( 'benribot_settings', 'benribot_client_key' );
-    register_setting( 'benribot_settings', 'benribot_embed_code' );
+    register_setting( 'benribot_settings', 'benribot_client_key', 'sanitize_text_field' );
+	register_setting( 'benribot_settings', 'benribot_embed_code', 'wp_kses_post' );
 
     add_settings_section(
         'benribot_general_section',
@@ -110,24 +112,47 @@ function benribot_embed_code_field_html() {
 }
 
 /**
- * Injects the BenriBot script into the website's footer.
+ * Enqueues the BenriBot script.
  */
-function benribot_inject_script() {
-    $embed_code = get_option( 'benribot_embed_code' );
+function benribot_scripts() {
     $client_key = get_option( 'benribot_client_key' );
+    $embed_code = get_option( 'benribot_embed_code' );
 
-    if ( ! empty( $embed_code ) ) {
-        // Output the raw embed code. It's expected that the admin provides a trusted script.
-        // Escaping this would break the script.
-        echo $embed_code;
-    } elseif ( ! empty( $client_key ) ) {
-        // Generate the script with the client key.
-        $script_url = 'https://cdn.benribot.com/v1/widget.js';
-        printf(
-            '<script async src="%s" data-client-key="%s"></script>',
-            esc_url( $script_url ),
-            esc_attr( $client_key )
+    if ( empty( $embed_code ) && ! empty( $client_key ) ) {
+        wp_enqueue_script(
+            'benribot-widget',
+            'https://cdn.benribot.com/v1/widget.js',
+            [],
+            BENRIBOT_VERSION,
+            true // In footer
         );
+        wp_script_add_data( 'benribot-widget', 'client-key', $client_key );
     }
 }
-add_action( 'wp_footer', 'benribot_inject_script' );
+add_action( 'wp_enqueue_scripts', 'benribot_scripts' );
+
+/**
+ * Adds async attribute to the enqueued script.
+ *
+ * @param string $tag    The <script> tag for the enqueued script.
+ * @param string $handle The script's handle.
+ * @return string The modified <script> tag.
+ */
+function benribot_add_async_attribute_to_script( $tag, $handle ) {
+    if ( 'benribot-widget' === $handle ) {
+        return str_replace( ' src', ' async src', $tag );
+    }
+    return $tag;
+}
+add_filter( 'script_loader_tag', 'benribot_add_async_attribute_to_script', 10, 2 );
+
+/**
+ * Injects the BenriBot embed code into the website's footer.
+ */
+function benribot_inject_embed_code() {
+    $embed_code = get_option( 'benribot_embed_code' );
+    if ( ! empty( $embed_code ) ) {
+        echo wp_kses_post( $embed_code );
+    }
+}
+add_action( 'wp_footer', 'benribot_inject_embed_code' );
