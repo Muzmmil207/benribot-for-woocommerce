@@ -3,12 +3,13 @@
  * Plugin Name: BenriBot for WooCommerce
  * Plugin URI:  https://benribot.com
  * Description: Integrates the BenriBot chat widget into your WooCommerce store.
- * Version:     1.0.0
+ * Version:     1.0.1
  * Author:      BenriBot
  * License:     GPLv2 or later
  * License URI: https://www.gnu.org/licenses/gpl-2.0.html
  * Text Domain: benribot-for-woocommerce
  * Domain Path: /languages
+ * Requires Plugins: woocommerce
  */
 
 // If this file is called directly, abort.
@@ -16,7 +17,7 @@ if ( ! defined( 'WPINC' ) ) {
     die;
 }
 
-define( 'BENRIBOT_VERSION', '1.0.0' );
+define( 'BENRIBOT_VERSION', '1.0.1' );
 
 /**
  * Adds the BenriBot admin menu item.
@@ -131,17 +132,36 @@ function benribot_inject_script() {
             BENRIBOT_VERSION,
             true
         );
-        // Pass the client key to the script using a data attribute.
-        add_filter( 'script_loader_tag', function( $tag, $handle, $src ) use ( $client_key ) {
-            if ( 'benribot-widget' === $handle ) {
-                $tag = sprintf(
-                    '<script async src="%s" data-client-key="%s"></script>',
-                    esc_url( $src ),
-                    esc_attr( $client_key )
-                );
-            }
-            return $tag;
-        }, 10, 3 );
+        
+        // Localize the script with the client key data.
+        wp_localize_script(
+            'benribot-widget',
+            'benribotConfig',
+            array(
+                'clientKey' => $client_key,
+            )
+        );
+        
+        // Add the data attribute to the script tag.
+        add_filter( 'script_loader_tag', 'benribot_add_client_key_attribute', 10, 3 );
     }
 }
 add_action( 'wp_footer', 'benribot_inject_script' );
+
+/**
+ * Adds the client key data attribute to the BenriBot script tag.
+ *
+ * @param string $tag    The script tag.
+ * @param string $handle The script handle.
+ * @param string $src    The script source.
+ * @return string Modified script tag.
+ */
+function benribot_add_client_key_attribute( $tag, $handle, $src ) {
+    if ( 'benribot-widget' === $handle ) {
+        $client_key = get_option( 'benribot_client_key' );
+        if ( ! empty( $client_key ) ) {
+            $tag = str_replace( ' src=', ' async data-client-key="' . esc_attr( $client_key ) . '" src=', $tag );
+        }
+    }
+    return $tag;
+}

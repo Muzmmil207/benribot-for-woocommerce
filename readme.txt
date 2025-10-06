@@ -1,9 +1,9 @@
 === BenriBot for WooCommerce ===
-Contributors: benribot
+Contributors: benribotai
 Tags: woocommerce, chat, chatbot, ai, ecommerce
 Requires at least: 5.0
 Tested up to: 6.8
-Stable tag: 1.0.0
+Stable tag: 1.0.1
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -29,6 +29,20 @@ You can find your Client Key and embed code in your BenriBot dashboard after sig
 = Does this plugin work without WooCommerce? =
 
 While it is named for WooCommerce, the plugin simply injects a script into your site's footer and does not have a hard dependency on WooCommerce. However, BenriBot itself is optimized for eCommerce platforms.
+
+== External services ==
+
+This plugin connects to the BenriBot CDN service to load the chat widget functionality. This connection is required for the plugin to function properly.
+
+**What data is sent and when:**
+- When using the Client Key method: The plugin loads the widget script from https://cdn.benribot.com/v1/widget.js and passes your Client Key to initialize the widget. No personal user data is transmitted.
+- When using the embed code method: The plugin executes the embed code you provide, which may connect to external BenriBot services as defined in your embed code.
+- Customer interactions with the chat widget (messages typed, responses received)
+
+**Service provider:**
+This service is provided by BenriBot. For more information, please review their:
+- Terms of Service: https://benribot.com/terms-of-service
+- Privacy Policy: https://benribot.com/privacy-policy
 
 == Changelog ==
 
