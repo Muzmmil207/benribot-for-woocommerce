@@ -90,7 +90,7 @@ benribot-for-woocommerce/
 
 The plugin uses BenriBot brand guidelines:
 
-- **Primary Color**: `#00FF88` (BenriBot green)
+- **Primary Color**: `#16a34a ` (BenriBot green)
 - **Font**: Inter (with fallbacks)
 - **Design**: Rounded corners (8-16px), subtle shadows, clean spacing
 - **Responsive**: Mobile-friendly with media queries

@@ -152,7 +152,7 @@ Toggles the widget embed status.
 
 The plugin uses the BenriBot brand guidelines:
 
-- **Primary Color:** `#00FF88` (BenriBot green)
+- **Primary Color:** `#16a34a ` (BenriBot green)
 - **Font:** Inter
 - **Design:** Clean, modern UI with rounded corners and subtle shadows
 
