@@ -1,0 +1,255 @@
+/* BenriBot Admin Styles */
+* {
+    box-sizing: border-box;
+}
+
+body.admin-page-benribot-settings {
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+}
+
+/* Main Container */
+#benribot-admin-app {
+    max-width: 1200px;
+    margin: 20px 0;
+}
+
+.benribot-admin-loading {
+    text-align: center;
+    padding: 60px 20px;
+}
+
+.benribot-admin-loading p {
+    font-size: 16px;
+    color: #666;
+}
+
+/* Connect Card */
+.benribot-connect-card {
+    background: #ffffff;
+    border-radius: 16px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+    padding: 32px;
+    max-width: 800px;
+    margin: 0 auto;
+}
+
+/* Header Section */
+.benribot-card-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 32px;
+    flex-wrap: wrap;
+    gap: 20px;
+}
+
+.benribot-logo-section {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.benribot-logo {
+    width: 40px;
+    height: 40px;
+    border-radius: 8px;
+}
+
+.benribot-brand {
+    font-size: 24px;
+    font-weight: 700;
+    color: #00FF88;
+    line-height: 1;
+}
+
+/* Buttons */
+.benribot-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 12px 24px;
+    border-radius: 8px;
+    font-size: 15px;
+    font-weight: 600;
+    cursor: pointer;
+    border: none;
+    transition: all 0.2s ease;
+    white-space: nowrap;
+}
+
+.benribot-btn-primary {
+    background: #00FF88;
+    color: white;
+}
+
+.benribot-btn-primary:hover {
+    background: #00E579;
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(0, 255, 136, 0.3);
+}
+
+.benribot-btn-primary:active {
+    transform: translateY(0);
+}
+
+.benribot-btn-secondary {
+    background: transparent;
+    color: #00FF88;
+    border: 2px solid #00FF88;
+}
+
+.benribot-btn-secondary:hover {
+    background: #00FF88;
+    color: white;
+}
+
+.benribot-btn svg {
+    flex-shrink: 0;
+}
+
+/* Middle Section */
+.benribot-card-middle {
+    padding: 24px 0;
+    border-top: 1px solid #E5E7EB;
+    border-bottom: 1px solid #E5E7EB;
+    margin-bottom: 24px;
+}
+
+.benribot-message {
+    margin-bottom: 24px;
+}
+
+.benribot-message p {
+    font-size: 16px;
+    line-height: 1.6;
+    color: #374151;
+    margin: 0;
+}
+
+/* Toggle Section */
+.benribot-toggle-section {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 16px;
+    background: #F9FAFB;
+    border-radius: 8px;
+}
+
+.benribot-toggle-label {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    cursor: pointer;
+    user-select: none;
+}
+
+.benribot-toggle-status {
+    font-size: 15px;
+    font-weight: 600;
+    color: #374151;
+}
+
+/* Toggle Switch */
+.benribot-toggle {
+    position: relative;
+    width: 48px;
+    height: 26px;
+    background: #D1D5DB;
+    border-radius: 13px;
+    border: none;
+    cursor: pointer;
+    transition: background 0.3s ease;
+    padding: 0;
+}
+
+.benribot-toggle.active {
+    background: #00FF88;
+}
+
+.benribot-toggle-slider {
+    position: absolute;
+    top: 3px;
+    left: 3px;
+    width: 20px;
+    height: 20px;
+    background: white;
+    border-radius: 50%;
+    transition: transform 0.3s ease;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+}
+
+.benribot-toggle.active .benribot-toggle-slider {
+    transform: translateX(22px);
+}
+
+.benribot-toggle:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+}
+
+/* Footer Section */
+.benribot-card-footer {
+    display: flex;
+    justify-content: center;
+}
+
+.benribot-status {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 15px;
+    font-weight: 500;
+}
+
+.benribot-status svg {
+    flex-shrink: 0;
+}
+
+.benribot-status-connected {
+    color: #059669;
+}
+
+.benribot-status-disconnected {
+    color: #D97706;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .benribot-connect-card {
+        padding: 24px;
+        margin: 20px;
+    }
+
+    .benribot-card-header {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+
+    .benribot-btn {
+        width: 100%;
+        justify-content: center;
+    }
+
+    .benribot-brand {
+        font-size: 20px;
+    }
+
+    .benribot-card-middle {
+        padding: 20px 0;
+    }
+
+    .benribot-message p {
+        font-size: 15px;
+    }
+}
+
+/* Loading Animation */
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
+.benribot-loading {
+    animation: spin 1s linear infinite;
+}

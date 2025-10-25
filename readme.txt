@@ -3,11 +3,11 @@ Contributors: benribotai
 Tags: woocommerce, chat, chatbot, ai, ecommerce
 Requires at least: 5.0
 Tested up to: 6.8
-Stable tag: 1.0.2
+Stable tag: 2.0.0
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
-Integrates the BenriBot AI chat widget into your WooCommerce store.
+Integrates the BenriBot AI chat widget into your WooCommerce store with a modern React-based admin interface.
 
 == Description ==
 
@@ -44,6 +44,15 @@ This service is provided by BenriBot. For more information, please review their:
 - Privacy Policy: https://benribot.com/privacy-policy
 
 == Changelog ==
+
+= 2.0.0 =
+* Complete redesign with modern React-based admin interface
+* Added one-click account connection flow
+* Added widget toggle control for easy enable/disable
+* Implemented secure REST API endpoints for connection management
+* Improved security with signature verification
+* Better mobile responsiveness and UX
+* Updated branding with BenriBot design guidelines
 
 = 1.0.2 =
 * Security: Removed arbitrary embed code functionality to comply with WordPress.org security guidelines.

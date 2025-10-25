@@ -1,0 +1,104 @@
+import { useState } from '@wordpress/element';
+
+export function ConnectCard({ 
+    connected, 
+    widgetEmbedded, 
+    onConnect, 
+    onAccessDashboard, 
+    onToggleWidget 
+}) {
+    const [isToggling, setIsToggling] = useState(false);
+
+    const handleToggle = async (enabled) => {
+        setIsToggling(true);
+        await onToggleWidget(enabled);
+        setIsToggling(false);
+    };
+
+    return (
+        <div className="benribot-connect-card">
+            {/* Top Section: Logo and Button */}
+            <div className="benribot-card-header">
+                <div className="benribot-logo-section">
+                    <img 
+                        src={benribotAdmin.logoUrl || 'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNDAiIGhlaWdodD0iNDAiIHZpZXdCb3g9IjAgMCA0MCA0MCIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPHJlY3Qgd2lkdGg9IjQwIiBoZWlnaHQ9IjQwIiByeD0iOCIgZmlsbD0iIzAwRkY4OCIvPgo8cGF0aCBkPSJNMjAgMTJMMTYgMjBIMjRMMjAgMTJaIiBmaWxsPSJ3aGl0ZSIvPgo8cGF0aCBkPSJNMTYgMjhMMjAgMjBMMjQgMjhIMTYiIGZpbGw9IndoaXRlIiBmaWxsLW9wYWNpdHk9IjAuOSIvPgo8L3N2Zz4K'} 
+                        alt="BenriBot Logo" 
+                        className="benribot-logo"
+                    />
+                    <span className="benribot-brand">BenriBot</span>
+                </div>
+                
+                {connected ? (
+                    <button 
+                        className="benribot-btn benribot-btn-secondary"
+                        onClick={onAccessDashboard}
+                    >
+                        <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M8 2L2 8L8 14M2 8H14" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                        </svg>
+                        Access Dashboard
+                    </button>
+                ) : (
+                    <button 
+                        className="benribot-btn benribot-btn-primary"
+                        onClick={onConnect}
+                    >
+                        <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M8 2L2 8L8 14M2 8H14" stroke="white" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                        </svg>
+                        Connect Account
+                    </button>
+                )}
+            </div>
+
+            {/* Middle Section: Message and Toggle */}
+            <div className="benribot-card-middle">
+                <div className="benribot-message">
+                    {connected ? (
+                        <p>Your BenriBot AI Agent is ready to help customers find products and answer questions.</p>
+                    ) : (
+                        <p>Connect your store to activate your BenriBot AI Agent and start assisting customers.</p>
+                    )}
+                </div>
+                
+                {connected && (
+                    <div className="benribot-toggle-section">
+                        <label className="benribot-toggle-label">
+                            <span className="benribot-toggle-status">
+                                {widgetEmbedded ? 'Active' : 'Inactive'}
+                            </span>
+                            <button
+                                className={`benribot-toggle ${widgetEmbedded ? 'active' : ''}`}
+                                onClick={() => handleToggle(!widgetEmbedded)}
+                                disabled={isToggling}
+                                role="switch"
+                                aria-checked={widgetEmbedded}
+                            >
+                                <span className="benribot-toggle-slider"></span>
+                            </button>
+                        </label>
+                    </div>
+                )}
+            </div>
+
+            {/* Bottom Section: Status */}
+            <div className="benribot-card-footer">
+                {connected ? (
+                    <div className="benribot-status benribot-status-connected">
+                        <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M13 4L6 11L3 8" stroke="#00FF88" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                        </svg>
+                        Account connected
+                    </div>
+                ) : (
+                    <div className="benribot-status benribot-status-disconnected">
+                        <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M8 3V8M8 13H8.01M15 8C15 11.866 11.866 15 8 15C4.13401 15 1 11.866 1 8C1 4.13401 4.13401 1 8 1C11.866 1 15 4.13401 15 8Z" stroke="#F59E0B" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                        </svg>
+                        Account not connected
+                    </div>
+                )}
+            </div>
+        </div>
+    );
+}

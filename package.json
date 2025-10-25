@@ -1,0 +1,21 @@
+{
+  "name": "benribot-for-woocommerce",
+  "version": "1.0.0",
+  "description": "BenriBot WooCommerce Plugin with Modern React Admin Interface",
+  "main": "index.js",
+  "scripts": {
+    "build": "wp-scripts build",
+    "start": "wp-scripts start",
+    "packages-update": "wp-scripts packages-update"
+  },
+  "keywords": [],
+  "author": "BenriBot",
+  "license": "ISC",
+  "packageManager": "pnpm@10.17.1",
+  "devDependencies": {
+    "@wordpress/element": "^6.33.0",
+    "@wordpress/scripts": "^30.26.0",
+    "react": "^19.2.0",
+    "react-dom": "^19.2.0"
+  }
+}
