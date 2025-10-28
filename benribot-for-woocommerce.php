@@ -204,7 +204,14 @@ function benribot_get_status() {
  */
 function benribot_callback_handler( $request ) {
     $client_key = $request->get_param( 'client_key' );
-    
+    $returned_state = $request->get_param( 'state' );
+
+	$expected_state = get_option( 'benribot_oauth_state', '' );
+	if ( empty( $returned_state ) || $returned_state !== $expected_state ) {
+		return new WP_Error( 'invalid_state', 'State mismatch.', array( 'status' => 400 ) );
+	}
+	delete_option( 'benribot_oauth_state' );
+
     if ( empty( $client_key ) ) {
         return new WP_Error(
             'missing_client_key',
