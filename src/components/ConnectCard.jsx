@@ -5,7 +5,8 @@ export function ConnectCard({
     widgetEmbedded, 
     onConnect, 
     onAccessDashboard, 
-    onToggleWidget 
+    onToggleWidget,
+    isConnecting = false,
 }) {
     const [isToggling, setIsToggling] = useState(false);
 
@@ -42,11 +43,18 @@ export function ConnectCard({
                     <button 
                         className="benribot-btn benribot-btn-primary"
                         onClick={onConnect}
+                        disabled={isConnecting}
                     >
-                        <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
-                            <path d="M8 2L2 8L8 14M2 8H14" stroke="white" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
-                        </svg>
-                        Connect Account
+                        {isConnecting ? (
+                            <svg className="benribot-loading" width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+                                <path d="M12 2a10 10 0 1 0 10 10" stroke="white" strokeWidth="2" strokeLinecap="round"/>
+                            </svg>
+                        ) : (
+                            <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                <path d="M8 2L2 8L8 14M2 8H14" stroke="white" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                            </svg>
+                        )}
+                        {isConnecting ? 'Connecting…' : 'Connect Account'}
                     </button>
                 )}
             </div>

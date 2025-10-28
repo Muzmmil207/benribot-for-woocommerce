@@ -7,6 +7,7 @@ export default function AdminApp() {
         widgetEmbedded: false,
         loading: true
     });
+    const [isConnecting, setIsConnecting] = useState(false);
 
     // Fetch connection status on mount
     useEffect(() => {
@@ -33,6 +34,8 @@ export default function AdminApp() {
     };
 
     const handleConnect = async () => {
+        if (isConnecting) return;
+        setIsConnecting(true);
         try {
             const response = await fetch('/wp-json/benribot/v1/connect', {
                 method: 'POST',
@@ -45,10 +48,15 @@ export default function AdminApp() {
             
             if (data.success && data.redirect_url) {
                 window.location.href = data.redirect_url;
+                return;
             }
+            alert('Unexpected response. Please try again.');
         } catch (error) {
             console.error('Error connecting:', error);
             alert('Failed to initiate connection. Please try again.');
+        } finally {
+            // In case we didn't navigate away
+            setIsConnecting(false);
         }
     };
 
@@ -91,6 +99,7 @@ export default function AdminApp() {
             onConnect={handleConnect}
             onAccessDashboard={handleAccessDashboard}
             onToggleWidget={handleToggleWidget}
+            isConnecting={isConnecting}
         />
     );
 }
