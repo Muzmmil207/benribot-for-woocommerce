@@ -308,10 +308,9 @@ function benribot_connect_account() {
  * Generate WooCommerce consumer keys.
  */
 function benribot_generate_consumer_keys() {
-    // Check if keys already exist
-    $existing_key = get_option( 'benribot_consumer_key' );
+    // If keys already exist, reuse them
+    $existing_key    = get_option( 'benribot_consumer_key' );
     $existing_secret = get_option( 'benribot_consumer_secret' );
-    
     if ( ! empty( $existing_key ) && ! empty( $existing_secret ) ) {
         return array(
             'consumer_key'    => $existing_key,
@@ -319,15 +318,88 @@ function benribot_generate_consumer_keys() {
         );
     }
 
-    // Generate new keys
+    // Ensure WooCommerce is active
+    if ( ! class_exists( 'WooCommerce' ) ) {
+        return new WP_Error( 'woocommerce_not_active', __( 'WooCommerce is required to create API keys.', 'benribot-for-woocommerce' ), array( 'status' => 400 ) );
+    }
+
     $description = 'BenriBot Integration - ' . get_bloginfo( 'name' );
-    $user_id = get_current_user_id();
-    
-    // Create consumer key using WooCommerce REST API
-    $consumer_key    = 'ck_' . wc_rand_hash();
-    $consumer_secret = 'cs_' . wc_rand_hash();
-    
-    // Save keys to options
+    $user_id     = get_current_user_id();
+
+    // Try to include WooCommerce API helpers if not already loaded
+    if ( ! function_exists( 'wc_create_api_key' ) ) {
+        $api_functions = WP_PLUGIN_DIR . '/woocommerce/includes/wc-api-functions.php';
+        if ( file_exists( $api_functions ) ) {
+            include_once $api_functions;
+        }
+        $admin_functions = WP_PLUGIN_DIR . '/woocommerce/includes/admin/wc-admin-functions.php';
+        if ( file_exists( $admin_functions ) ) {
+            include_once $admin_functions;
+        }
+    }
+
+    // Generate consumer key/secret
+    if ( function_exists( 'wc_rand_hash' ) ) {
+        $consumer_key    = 'ck_' . wc_rand_hash();
+        $consumer_secret = 'cs_' . wc_rand_hash();
+    } else {
+        $consumer_key    = 'ck_' . wp_generate_password( 12, false );
+        $consumer_secret = 'cs_' . wp_generate_password( 32, false );
+    }
+
+    // Preferred: use WooCommerce API to create key
+    if ( function_exists( 'wc_create_api_key' ) ) {
+        $key_id = wc_create_api_key( $user_id, $description, 'read', $consumer_key, $consumer_secret );
+
+        if ( ! $key_id || is_wp_error( $key_id ) ) {
+            if ( is_wp_error( $key_id ) ) {
+                return $key_id;
+            }
+            return new WP_Error( 'api-key-error', __( 'Failed to create WooCommerce API key.', 'benribot-for-woocommerce' ), array( 'status' => 500 ) );
+        }
+
+        // Persist for reuse
+        update_option( 'benribot_wc_api_key_id', $key_id, false );
+        update_option( 'benribot_consumer_key', $consumer_key );
+        update_option( 'benribot_consumer_secret', $consumer_secret );
+
+        return array(
+            'consumer_key'    => $consumer_key,
+            'consumer_secret' => $consumer_secret,
+        );
+    }
+
+    // Fallback: insert directly into WooCommerce API keys table
+    global $wpdb;
+    $table = $wpdb->prefix . 'woocommerce_api_keys';
+
+    // Hash function for consumer key (matches Woo behavior when available)
+    if ( function_exists( 'wc_api_hash' ) ) {
+        $hashed_key = wc_api_hash( $consumer_key );
+    } else {
+        $hashed_key = hash( 'sha256', $consumer_key );
+    }
+
+    $inserted = $wpdb->insert(
+        $table,
+        array(
+            'user_id'         => $user_id,
+            'description'     => $description,
+            'permissions'     => 'read',
+            'consumer_key'    => $hashed_key,
+            'consumer_secret' => $consumer_secret,
+            'truncated_key'   => substr( $consumer_key, -7 ),
+            'last_access'     => null,
+        ),
+        array( '%d', '%s', '%s', '%s', '%s', '%s', '%s' )
+    );
+
+    if ( ! $inserted ) {
+        return new WP_Error( 'api-key-error', __( 'Failed to create WooCommerce API key in database.', 'benribot-for-woocommerce' ), array( 'status' => 500 ) );
+    }
+
+    $key_id = $wpdb->insert_id;
+    update_option( 'benribot_wc_api_key_id', $key_id, false );
     update_option( 'benribot_consumer_key', $consumer_key );
     update_option( 'benribot_consumer_secret', $consumer_secret );
 
