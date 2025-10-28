@@ -133,22 +133,99 @@ function benribot_register_rest_routes() {
             },
         )
     );
+
+    register_rest_route(
+        'benribot/v1',
+        '/callback',
+        array(
+            'methods'             => 'GET',
+            'callback'            => 'benribot_callback_handler',
+            'permission_callback' => '__return_true', // Public endpoint for redirect
+        )
+    );
 }
 add_action( 'rest_api_init', 'benribot_register_rest_routes' );
 
 /**
- * Get connection status.
+ * Get connection status from BenriBot API.
  */
 function benribot_get_status() {
-    $connected = get_option( 'benribot_connected', false );
-    $client_key = get_option( 'benribot_client_key', '' );
     $widget_embedded = get_option( 'benribot_widget_embedded', false );
-
+    
+    // Get stored client key
+    $client_key = get_option( 'benribot_client_key', '' );
+    
+    if ( empty( $client_key ) ) {
+        return array(
+            'connected'       => false,
+            'widget_embedded' => $widget_embedded,
+        );
+    }
+    
+    // Fetch connection status from BenriBot API
+    $api_url = 'https://app.benribot.com/api/v1/wordpress/status?client_key=' . $client_key;
+    
+    $response = wp_remote_get($api_url);
+    
+    // Handle error or API failure
+    if ( is_wp_error( $response ) ) {
+        return array(
+            'connected'       => false,
+            'widget_embedded' => $widget_embedded,
+        );
+    }
+    
+    $response_code = wp_remote_retrieve_response_code( $response );
+    $response_body = wp_remote_retrieve_body( $response );
+    $data = json_decode( $response_body, true );
+    
+    if ( $response_code !== 200 || ! $data ) {
+        return array(
+            'connected'       => false,
+            'widget_embedded' => $widget_embedded,
+        );
+    }
+    
+    // Update local storage with API response
+    if ( isset( $data['connected'] ) && $data['connected'] ) {
+        update_option( 'benribot_connected', true );
+    } else {
+        update_option( 'benribot_connected', false );
+    }
+    
     return array(
-        'connected'       => ! empty( $client_key ) && $connected,
-        'client_key'      => $client_key,
+        'connected'       => isset( $data['connected'] ) ? $data['connected'] : false,
         'widget_embedded' => $widget_embedded,
     );
+}
+
+/**
+ * Handle callback from BenriBot onboarding.
+ */
+function benribot_callback_handler( $request ) {
+    $client_key = $request->get_param( 'client_key' );
+    
+    if ( empty( $client_key ) ) {
+        return new WP_Error(
+            'missing_client_key',
+            'Client key is required',
+            array( 'status' => 400 )
+        );
+    }
+    
+    // Store the client key
+    update_option( 'benribot_connected', true );
+    
+    if ( ! empty( $client_key ) ) {
+        update_option( 'benribot_client_key', $client_key );
+    }
+    
+    // Enable widget by default after connection
+    update_option( 'benribot_widget_embedded', true );
+    
+    // Redirect to admin page
+    wp_redirect( admin_url( 'admin.php?page=benribot-settings&connected=1' ) );
+    exit;
 }
 
 /**
@@ -196,6 +273,9 @@ function benribot_connect_account() {
     $signature_string = implode( '|', $signature_data );
     $signature = hash( 'sha256', $signature_string . $signature_secret );
 
+    // Build callback URL
+    $callback_url = rest_url( 'benribot/v1/callback' );
+    
     // Build redirect URL
     $redirect_url = add_query_arg(
         array(
@@ -206,6 +286,7 @@ function benribot_connect_account() {
             'store_name'      => rawurlencode( $store_name ),
             'state'           => rawurlencode( $state ),
             'signature'       => $signature,
+            'callback_url'    => rawurlencode( $callback_url ),
         ),
         'https://app.benribot.com/onboarding/woocommerce'
     );

@@ -21,7 +21,7 @@ export function ConnectCard({
             <div className="benribot-card-header">
                 <div className="benribot-logo-section">
                     <img 
-                        src={benribotAdmin.logoUrl || 'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNDAiIGhlaWdodD0iNDAiIHZpZXdCb3g9IjAgMCA0MCA0MCIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPHJlY3Qgd2lkdGg9IjQwIiBoZWlnaHQ9IjQwIiByeD0iOCIgZmlsbD0iIzAwRkY4OCIvPgo8cGF0aCBkPSJNMjAgMTJMMTYgMjBIMjRMMjAgMTJaIiBmaWxsPSJ3aGl0ZSIvPgo8cGF0aCBkPSJNMTYgMjhMMjAgMjBMMjQgMjhIMTYiIGZpbGw9IndoaXRlIiBmaWxsLW9wYWNpdHk9IjAuOSIvPgo8L3N2Zz4K'} 
+                        src={benribotAdmin.logoUrl} 
                         alt="BenriBot Logo" 
                         className="benribot-logo"
                     />
