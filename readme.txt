@@ -68,7 +68,6 @@ This service is provided by BenriBot. For more information, please review their:
 * Implemented secure REST API endpoints for connection management
 * Improved security with signature verification
 * Better mobile responsiveness and UX
-* Updated branding with BenriBot design guidelines
 
 = 1.0.2 =
 * Security: Removed arbitrary embed code functionality to comply with WordPress.org security guidelines.
