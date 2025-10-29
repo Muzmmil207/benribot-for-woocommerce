@@ -203,8 +203,12 @@ function benribot_get_status() {
  * Handle callback from BenriBot onboarding.
  */
 function benribot_callback_handler( $request ) {
-    $client_key = $request->get_param( 'client_key' );
-    $returned_state = $request->get_param( 'state' );
+    $client_key_raw   = $request->get_param( 'client_key' );
+    $returned_state   = $request->get_param( 'state' );
+
+    // Sanitize incoming values
+    $client_key   = is_string( $client_key_raw ) ? sanitize_text_field( wp_unslash( $client_key_raw ) ) : '';
+    $returned_state = is_string( $returned_state ) ? sanitize_text_field( wp_unslash( $returned_state ) ) : '';
 
 	$expected_state = get_option( 'benribot_oauth_state', '' );
 	if ( empty( $returned_state ) || $returned_state !== $expected_state ) {
@@ -475,3 +479,34 @@ function benribot_add_client_key_attribute( $tag, $handle, $src ) {
     }
     return $tag;
 }
+
+/**
+ * Add suggested privacy policy text to the site's Privacy Policy guide.
+ */
+function benribot_add_privacy_policy_content() {
+    if ( ! function_exists( 'wp_add_privacy_policy_content' ) ) {
+        return;
+    }
+
+    $content = __(
+        'This site uses the BenriBot chat widget to assist visitors. The widget is loaded from BenriBot\'s CDN and may process chat messages entered by visitors. No WordPress user account data is sent by this plugin.\n\n\nData shared with BenriBot:\n- Chat messages entered in the widget\n- Technical details required to operate the widget\n\nProvider details:\n- Service: BenriBot Chat Widget\n- CDN: https://cdn.benribot.com/v1/widget.js\n- Terms: https://benribot.com/terms-of-service\n- Privacy: https://benribot.com/privacy-policy',
+        'benribot-for-woocommerce'
+    );
+
+    // Allow basic formatting and links.
+    $allowed = array(
+        'a'      => array( 'href' => array(), 'rel' => array(), 'target' => array() ),
+        'strong' => array(),
+        'em'     => array(),
+        'p'      => array(),
+        'ul'     => array(),
+        'li'     => array(),
+        'br'     => array(),
+    );
+
+    wp_add_privacy_policy_content(
+        __( 'BenriBot for WooCommerce', 'benribot-for-woocommerce' ),
+        wp_kses( nl2br( $content ), $allowed )
+    );
+}
+add_action( 'admin_init', 'benribot_add_privacy_policy_content' );
