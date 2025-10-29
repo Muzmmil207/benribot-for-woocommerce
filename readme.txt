@@ -11,24 +11,40 @@ Integrates the BenriBot AI chat widget into your WooCommerce store with a modern
 
 == Description ==
 
-BenriBot is your AI agent for eCommerce. This plugin allows you to easily embed the BenriBot chat widget into your WooCommerce store. Simply add your Client Key from your BenriBot dashboard to get started. The widget will appear in your store's footer, ready to assist your customers.
+BenriBot is your AI agent for eCommerce. This plugin now provides a one‑click connection flow and a modern React admin UI. Connect your store to BenriBot from the BenriBot settings page; the plugin will securely exchange keys and enable the chat widget. You can toggle the widget on/off anytime.
 
 == Installation ==
 
 1. Upload the `benribot-for-woocommerce` folder to the `/wp-content/plugins/` directory.
 2. Activate the plugin through the 'Plugins' menu in WordPress.
 3. Go to the "BenriBot" settings page in your WordPress admin dashboard.
-4. Add your Client Key and save the settings.
+4. Click "Connect Account" to start the one‑click onboarding. Once connected, use the switch to enable/disable the widget.
 
 == Frequently Asked Questions ==
 
-= Where can I find my Client Key? =
+= How does the connection work? =
 
-You can find your Client Key in your BenriBot dashboard after signing up.
+The plugin uses a one-click secure connection to link your WooCommerce store with your BenriBot account. When you click “Connect Account,” your store’s API keys are created and verified automatically—no need to copy or paste anything.
 
-= Does this plugin work without WooCommerce? =
+= Is the chatbot customizable? =
 
-While it is named for WooCommerce, the plugin simply injects a script into your site's footer and does not have a hard dependency on WooCommerce. However, BenriBot itself is optimized for eCommerce platforms.
+Yes, you can fully customize the chatbot’s appearance, tone, and automation behavior from your BenriBot dashboard.
+
+= What information is shared with BenriBot? =
+
+The plugin securely shares your store’s public details and API credentials to enable real-time syncing of products, categories, and customer messages. No sensitive customer payment data is ever shared.
+
+= Does this plugin work with all WooCommerce themes? =
+
+Yes. The BenriBot chatbot is lightweight and theme-independent. It works smoothly with all WooCommerce-compatible themes.
+
+= Can I disconnect my store from BenriBot? =
+
+Yes, you can disconnect anytime from the BenriBot plugin settings or your BenriBot dashboard. This will immediately stop all data syncing.
+
+= Will this plugin slow down my website? =
+
+No. The BenriBot chatbot loads asynchronously through a lightweight script, ensuring your site speed and performance remain unaffected.
 
 == External services ==
 
