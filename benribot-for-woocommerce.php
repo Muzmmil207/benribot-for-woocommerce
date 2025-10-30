@@ -327,7 +327,7 @@ function benribot_generate_consumer_keys() {
         return new WP_Error( 'woocommerce_not_active', __( 'WooCommerce is required to create API keys.', 'benribot-for-woocommerce' ), array( 'status' => 400 ) );
     }
 
-    $description = 'BenriBot Integration - ' . get_bloginfo( 'name' );
+    $description = 'BenriBot Integration - ' . date_i18n( 'Y-m-d' );
     $user_id     = get_current_user_id();
 
     // Try to include WooCommerce API helpers if not already loaded
