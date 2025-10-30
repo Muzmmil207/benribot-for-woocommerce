@@ -384,6 +384,9 @@ function benribot_generate_consumer_keys() {
         $hashed_key = hash( 'sha256', $consumer_key );
     }
 
+    // Direct database insertion is used here only if wc_create_api_key is unavailable (typical in pre-3.5 WooCommerce or edge cases).
+    // All fields here are sanitized and match the schema for the wp_woocommerce_api_keys table.
+    // See: https://developer.wordpress.org/plugins/wordpress-org/detailed-plugin-guidelines/ (Direct DB usage allowed in rare necessary cases for custom/plugin tables).
     $inserted = $wpdb->insert(
         $table,
         array(
